@@ -4,6 +4,9 @@ _Cold Waters Telemetry_ is a mod for the game _Cold Waters_ that adds telemetry 
 When the game starts, the mod opens a port with an SSE (Server-Sent Events) endpoint (the default is `http://localhost:2222/`),
 which you can connect to from your own application to process submarine events (events are in JSON format).
 
+> [!IMPORTANT]
+> The goal of the mod is to allow other developers to create their own programs that process data from _Cold Waters_ or create hardware controls for submarines.
+
 I created an app for the plugin that displays real-time data on my second monitor (in a web browser).
 
 ![Cold Waters Web APP](doc/images/CwWebApp.png)
