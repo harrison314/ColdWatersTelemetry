@@ -1,0 +1,125 @@
+:root {
+    --digital-color: #EC0904;
+}
+
+@font-face {
+    font-family: "DSEG7Classic";
+    src: url("DSEG7-Classic/DSEG7Classic-Regular.woff2") format("woff2"), url("DSEG7-Classic/DSEG7Classic-Regular.woff") format("woff"), url("DSEG7-Classic/DSEG7Classic-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+.digital {
+    font-family: "DSEG7Classic", monospace;
+}
+
+.display-segment {
+    padding: 0.2rem 1.2rem 0.2rem 0.2rem;
+}
+
+    .display-segment > small {
+        font-family: "Courier New", Courier, monospace;
+        font-weight: bold;
+        letter-spacing: 0.10em;
+    }
+
+    .display-segment > section {
+        font-family: "DSEG7Classic", monospace;
+        font-size: 200%;
+        text-align: right;
+        color: var(--digital-color);
+    }
+
+        .display-segment > section .mute {
+            color: color-mix(in oklab, var(--digital-color), var(--pico-card-background-color) 95%);
+        }
+
+.military-sub-80s {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.92rem;
+    color: #6bff6b !important;
+    background-color: #020805;
+    padding: 0.8rem 1.2rem;
+    border: 2px solid #1aff1a;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    text-shadow: 0 0 2px #6bff6b, 0 0 4px #1aff1a, 0 0 8px #0f660f;
+    box-shadow: 0 0 10px #0f660f, inset 0 0 20px #000 !important;
+    background-image: linear-gradient( to bottom, rgba(0, 0, 0, 0.35) 50%, rgba(0, 255, 0, 0.05) 51% ) !important;
+    background-size: 100% 3px;
+    border-radius: var(--pico-border-radius);
+}
+
+    .military-sub-80s.flicker {
+        animation: crt-flicker 2.2s infinite steps(2, end);
+    }
+
+    .military-sub-80s ul {
+        padding-inline-start: 20px;
+        color: #6bff6b !important;
+    }
+
+@keyframes crt-flicker {
+    0% {
+        opacity: 0.96;
+    }
+
+    10% {
+        opacity: 0.85;
+    }
+
+    20% {
+        opacity: 0.98;
+    }
+
+    35% {
+        opacity: 0.90;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    65% {
+        opacity: 0.88;
+    }
+
+    80% {
+        opacity: 0.97;
+    }
+
+    100% {
+        opacity: 0.94;
+    }
+}
+
+.submarine-btn {
+    font-family: "Courier New", monospace;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.4rem 1.0rem;
+    border: 2px solid #0f3d0f;
+    background: linear-gradient(#0a0a0a, #111);
+    color: #6bff6b;
+    cursor: pointer;
+    display: inline-block;
+
+    box-shadow: 0 0 4px #000, inset 0 0 6px #000, inset 0 0 12px rgba(0, 255, 0, 0.05);
+    transition: all 0.15s ease-out;
+    margin: 0.2rem;
+}
+
+    .submarine-btn.on {
+        background: #114911;
+        border-color: #5ff55f;
+        color: #b6ffb6;
+        text-shadow: 0 0 4px #1aff1a, 0 0 8px #0f660f;
+        box-shadow: 0 0 12px #0f660f, inset 0 0 18px rgba(0, 255, 0, 0.25);
+        border: 2px solid #5ff55f;
+    }
+
+.submarine-btns {
+    margin-bottom: 0.75rem;
+}

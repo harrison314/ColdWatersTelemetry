@@ -1,0 +1,161 @@
+﻿<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark">
+    <link rel="stylesheet" href="lib/picocss/pico.min.css" />
+    <link rel="stylesheet" href="css/site.css" />
+    <title>Cold Waters Telemetry</title>
+    <style>
+    </style>
+</head>
+<body>
+    <main class="container" x-data="sseComponent()" x-init="connect()">
+        <article class="display-segment">
+            <span x-show="!state.submarineIsOnline" aria-busy="true">Wait for uplink</span>
+        </article>
+
+        <div class="grid">
+            <div>
+                <article class="display-segment">
+                    <small>Curse</small>
+                    <section x-text="state.curse">
+                    </section>
+                </article>
+                <article class="display-segment">
+                    <small>Speed</small>
+                    <section x-text="state.speed">
+                    </section>
+                </article>
+                <article class="display-segment">
+                    <small>Depth</small>
+                    <section>
+                        <span x-text="state.depth"></span>
+                    </section>
+                </article>
+
+                <article class="display-segment">
+                    <small>Rudder</small>
+                    <section class="grid">
+                        <div x-text="state.rudderAngle"></div>
+                        <div x-text="state.diveAngle"></div>
+                    </section>
+                </article>
+            </div>
+            <div>
+                <div class="submarine-btns">
+                    <button class="submarine-btn" x-bind:class="(showMsg == 'Breefing') ? 'submarine-btn on' : 'submarine-btn'" x-on:click="showMsg = 'Breefing'">Breefing</button>
+                    <button class="submarine-btn" x-bind:class="(showMsg == 'Orders') ? 'submarine-btn on' : 'submarine-btn'" x-on:click="showMsg = 'Orders'">Orders</button>
+                    <button class="submarine-btn" x-bind:class="(showMsg == 'Messages') ? 'submarine-btn on' : 'submarine-btn'" x-on:click="showMsg = 'Messages'">Messages</button>
+                </div>
+
+                <template x-if="showMsg == 'Breefing'">
+                    <div class="military-sub-80s" x-html="nl2br(state.breefing)">
+                    </div>
+                </template>
+                <template x-if="showMsg == 'Orders'">
+                    <div class="military-sub-80s" x-html="nl2br(state.orders)">
+                    </div>
+                </template>
+                <template x-if="showMsg == 'Messages'">
+                    <div class="military-sub-80s">
+                        <ul>
+                            <template x-for="msg in state.messages.toReversed()">
+                                <li x-text="msg"></li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </main>
+
+    <script type="text/javascript">
+        const sourceUrl = "/events";
+        window.sseComponent = function () {
+            return {
+                es: null,
+                connected: false,
+                reconnectAttempts: 0,
+                maxBackoff: 30000, // in ms
+                state: {
+                    submarineIsOnline: false,
+                    curse: '-',
+                    speed: '-',
+                    depth: '-',
+                    rudderAngle: '-',
+                    diveAngle: '-',
+                    breefing: '...',
+                    orders: '...',
+                    messages: []
+                },
+                showMsg: 'Breefing',
+
+
+                start() {
+                    this.connect();
+                },
+
+                connect() {
+                    if (this.es) {
+                        this.es.close();
+                        this.es = null;
+                    }
+
+                    this.es = new EventSource(sourceUrl);
+
+                    this.es.onopen = () => {
+                        this.connected = true;
+                        this.reconnectAttempts = 0;
+                    };
+
+                    this.es.onerror = () => {
+                        this.connected = false;
+                        this.scheduleReconnect();
+                    };
+
+                    this.es.onmessage = (e) => {
+                        const data = JSON.parse(e.data);
+
+                        this.$nextTick(() => {
+                            this.state = data;
+                        });
+                    };
+                },
+
+                scheduleReconnect() {
+                    this.reconnectAttempts++;
+
+                    const delay = Math.min(
+                        1000 * Math.pow(2, this.reconnectAttempts),
+                        this.maxBackoff
+                    );
+
+                    setTimeout(() => this.connect(), delay);
+                },
+
+                nl2br(text) {
+                    const line = text.split("\n");
+                    let lines = "";
+                    for (let i = 0; i < line.length; i++) {
+                        lines += line[i] + '<br />';
+                    }
+                    return lines;
+                },
+
+                muteText(text, count) {
+                    var result = '';
+                    var padCount = count - text.replace('.', '').replace(':', '').length;
+                    if (padCount > 0) {
+                        result = "8".repeat(padCount);
+                    }
+
+                    return result;
+                }
+            };
+        }
+    </script>
+    <script type="text/javascript" src="lib/alpinejs/cdn.min.js"></script>
+</body>
+</html>

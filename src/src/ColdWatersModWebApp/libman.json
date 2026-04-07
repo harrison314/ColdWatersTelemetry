@@ -1,0 +1,16 @@
+{
+  "version": "3.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "alpinejs@3.15.0",
+      "destination": "wwwroot/lib/alpinejs",
+      "files": [ "cdn.min.js" ]
+    },
+    {
+      "library": "picocss@2.1.1",
+      "destination": "wwwroot/lib/picocss",
+      "files": [ "pico.min.css" ]
+    }
+  ]
+}
